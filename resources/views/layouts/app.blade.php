@@ -44,8 +44,8 @@
                     <span>Rooms</span>
                 </a>
 
-                <a href="#" 
-                   class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <a href="{{ route('contracts.index') }}"
+                   class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition {{ request()->routeIs('contracts.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fa-solid fa-file-contract w-6 text-base"></i>
                     <span>Tenants &amp; Contracts</span>
                 </a>
