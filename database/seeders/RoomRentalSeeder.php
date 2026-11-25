@@ -22,17 +22,17 @@ class RoomRentalSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $standard = RoomType::updateOrCreate(['type_name' => 'Standard Room'], [
-            'base_price' => 60,
-            'description' => 'Comfortable furnished room for one or two people.',
+        $standard = RoomType::updateOrCreate(['type_name' => 'បន្ទប់កង្ហារ (ធម្មតា)'], [
+            'base_price' => 45,
+            'description' => 'មានកង្ហារ គ្រែ១ និងបន្ទប់ទឹកក្នុង',
         ]);
-        $deluxe = RoomType::updateOrCreate(['type_name' => 'Deluxe Room'], [
-            'base_price' => 100,
-            'description' => 'Larger furnished room with private bathroom.',
+        $deluxe = RoomType::updateOrCreate(['type_name' => 'បន្ទប់ម៉ាស៊ីនត្រជាក់ (គ្រែ១)'], [
+            'base_price' => 80,
+            'description' => 'មានម៉ាស៊ីនត្រជាក់ គ្រែធំ និងទូសម្លៀកបំពាក់',
         ]);
-        $studio = RoomType::updateOrCreate(['type_name' => 'Studio Apartment'], [
-            'base_price' => 150,
-            'description' => 'Self-contained studio for long-term tenants.',
+        $studio = RoomType::updateOrCreate(['type_name' => 'បន្ទប់ម៉ាស៊ីនត្រជាក់ (ធំ + ផ្ទះបាយ)'], [
+            'base_price' => 120,
+            'description' => 'បន្ទប់ធំទូលាយ មានម៉ាស៊ីនត្រជាក់ ផ្ទះបាយ និងវេរ៉ង់ដា',
         ]);
 
         $rooms = collect([
@@ -50,10 +50,10 @@ class RoomRentalSeeder extends Seeder
         });
 
         $tenants = collect([
-            ['full_name' => 'Sokha Chan', 'phone' => '012 345 678', 'national_id' => 'KH-10001', 'emergency_contact' => 'Chan Dara - 012 222 333'],
-            ['full_name' => 'Dara Sreyneang', 'phone' => '097 456 789', 'national_id' => 'KH-10002', 'emergency_contact' => 'Srey Mom - 097 111 222'],
-            ['full_name' => 'Vannak Kim', 'phone' => '010 987 654', 'national_id' => 'KH-10003', 'emergency_contact' => 'Kim Sothea - 010 333 444'],
-            ['full_name' => 'Pisey Ly', 'phone' => '088 222 111', 'national_id' => 'KH-10004', 'emergency_contact' => 'Ly Bopha - 088 555 666'],
+            ['full_name' => 'សុខ ដារ៉ា', 'phone' => '012 345 678', 'national_id' => 'KH-10001', 'emergency_contact' => 'ដារ៉ា ធារា - 012 222 333'],
+            ['full_name' => 'ចាន់ ស្រីនិច', 'phone' => '097 456 789', 'national_id' => 'KH-10002', 'emergency_contact' => 'ស្រីមុំ - 097 111 222'],
+            ['full_name' => 'កែវ វិបុល', 'phone' => '010 987 654', 'national_id' => 'KH-10003', 'emergency_contact' => 'កែវ សុធា - 010 333 444'],
+            ['full_name' => 'លី សុជាតា', 'phone' => '088 222 111', 'national_id' => 'KH-10004', 'emergency_contact' => 'លី បូពា - 088 555 666'],
         ])->map(fn (array $tenant): Tenant => Tenant::updateOrCreate(
             ['national_id' => $tenant['national_id']],
             $tenant,

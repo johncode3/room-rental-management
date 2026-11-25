@@ -1,57 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Rental Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-8 font-sans">
-    <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Room Management</h1>
-                <p class="text-sm text-gray-500">Overview of all rental rooms</p>
-            </div>
-            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-6xl mx-auto">
+    @if (session('success'))
+        <div class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-gray-200 mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Room Management</h1>
+            <p class="text-sm text-gray-500 mt-1">Manage rooms, pricing, and live occupancy status.</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex items-center space-x-3">
+            <span class="bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
                 Total Rooms: {{ $rooms->count() }}
             </span>
+            <a href="{{ route('rooms.create') }}" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
+                <i class="fa-solid fa-plus mr-2"></i>
+                បន្ថែមបន្ទប់ថ្មី (Add Room)
+            </a>
         </div>
+    </div>
 
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                        <th class="py-3 px-4">Room No.</th>
-                        <th class="py-3 px-4">Room Type</th>
-                        <th class="py-3 px-4">Base Price</th>
-                        <th class="py-3 px-4">Status</th>
+                    <tr class="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="py-3.5 px-6">លេខបន្ទប់ / Room</th>
+                        <th class="py-3.5 px-6">ប្រភេទបន្ទប់ / Type</th>
+                        <th class="py-3.5 px-6">តម្លៃជួល / Price</th>
+                        <th class="py-3.5 px-6">ស្ថានភាព / Status</th>
+                        <th class="py-3.5 px-6 text-right">សកម្មភាព / Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 text-sm">
+                <tbody class="divide-y divide-gray-100 text-sm">
                     @forelse ($rooms as $room)
-                        <tr class="hover:bg-gray-50">
-                            <td class="py-3 px-4 font-bold text-gray-800">{{ $room->room_number }}</td>
-                            <td class="py-3 px-4 text-gray-600">{{ $room->roomType->type_name ?? 'N/A' }}</td>
-                            <td class="py-3 px-4 text-gray-600">${{ number_format($room->roomType->base_price ?? 0, 2) }}</td>
-                            <td class="py-3 px-4">
+                        <tr class="hover:bg-gray-50/80 transition-colors">
+                            <td class="py-4 px-6 font-bold text-gray-900 flex items-center space-x-2">
+                                <i class="fa-solid fa-door-closed text-gray-400 text-xs"></i>
+                                <span>Room {{ $room->room_number }}</span>
+                            </td>
+                            <td class="py-4 px-6 text-gray-600">
+                                {{ $room->roomType->type_name ?? 'N/A' }}
+                            </td>
+                            <td class="py-4 px-6 font-semibold text-gray-900">
+                                ${{ number_format($room->roomType->base_price ?? 0, 2) }}
+                                <span class="text-xs text-gray-400 font-normal">/mo</span>
+                            </td>
+                            <td class="py-4 px-6">
                                 @if($room->status === 'available')
-                                    <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded font-medium">Available</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span><span class="font-khmer">ទំនេរ (Available)</span>
+                                    </span>
                                 @elseif($room->status === 'occupied')
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded font-medium">Occupied</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span><span class="font-khmer">មានអ្នកជួល (Occupied)</span>
+                                    </span>
                                 @else
-                                    <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-0.5 rounded font-medium">{{ ucfirst($room->status) }}</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span><span class="font-khmer">កំពុងជួសជុល (Maintenance)</span>
+                                    </span>
                                 @endif
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="flex justify-end items-center space-x-2">
+                                    <a href="{{ route('rooms.show', $room) }}"
+                                       class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                                       title="View Room"
+                                       aria-label="View Room">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('rooms.edit', $room) }}"
+                                       class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                                       title="Edit Room"
+                                       aria-label="Edit Room">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <form action="{{ route('rooms.destroy', $room) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this room?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+                                                title="Delete Room"
+                                                aria-label="Delete Room">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center py-4 text-gray-500">No rooms found. Run the seeder first!</td>
+                            <td colspan="5" class="text-center py-8 text-gray-400">
+                                No rooms found. Run your seeder to view records.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection
